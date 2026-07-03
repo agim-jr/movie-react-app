@@ -1,6 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 
 export default function Home() {
+  const [searchTerm, setSearchTerm] = useState('');
+  const [movies, setMovies] = useState([]);
+
+const handleSearch = async () => {
+  if (!searchTerm) return;
+
+  const response = await fetch(`http://www.omdbapi.com/?s=${searchTerm}&apikey=c31b6b59`);
+  const data = await response.json();
+
+  if (data.Search) {
+    setMovies(data.Search);
+    console.log(data.Search); // Check console to see the data
+  }
+};
+
   return (
     <div className="container">
       <div className="search-section">
@@ -8,8 +23,10 @@ export default function Home() {
         <input
           type="text"
           placeholder="Search for a movie..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
         />
-        <button>Search</button>
+        <button onClick={handleSearch}>Search</button>
       </div>
 
       <div className="filter-section" style={{ display: 'none' }}>
