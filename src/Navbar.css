@@ -1,0 +1,33 @@
+/* Nav.css */
+.navbar {
+  display: flex; /* Use flexbox for layout */
+  justify-content: space-between; /* Space between logo and menu */
+  align-items: center; /* Align items vertically */
+  background-color: #333; /* Dark background color */
+  padding: 1rem; /* Padding around the navbar */
+}
+
+.nav__logo {
+  color: white; /* Logo color */
+  text-decoration: none; /* Remove underline */
+  font-size: 24px; /* Logo font size */
+}
+
+.nav__menu {
+  list-style: none; /* Remove list style */
+  display: flex; /* Flex for horizontal layout */
+}
+
+.nav__item {
+  margin-right: 20px; /* Space between items */
+}
+
+.nav__link {
+  color: white; /* Link color */
+  text-decoration: none; /* Remove underline */
+  font-size: 18px; /* Link font size */
+}
+
+.nav__link:hover {
+  text-decoration: underline; /* Underline link on hover */
+}

@@ -1,23 +1,29 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
+import './Navbar.css';
 
 function Nav() {
   return (
     <nav className="navbar">
       <div className="nav__container">
-        <Link to="/" className="nav__logo">
-          My App
-        </Link>
+        <NavLink to="/" className="nav__logo">
+          <img src=".\MovieApp.png" alt="Movie Logo" className="nav__logo-image" />
+        </NavLink>
         <ul className="nav__menu">
           <li className="nav__item">
-            <Link to="/" className="nav__link">
+            <NavLink to="/" className="nav__link" activeClassName="active">
               Home
-            </Link>
+            </NavLink>
           </li>
           <li className="nav__item">
-            <Link to="/about" className="nav__link">
-              About
-            </Link>
+            <NavLink to="/find-movie" className="nav__link" activeClassName="active">
+              Find your movie
+            </NavLink>
+          </li>
+          <li className="nav__item">
+            <NavLink to="/contact" className="nav__link" activeClassName="active">
+              Contact
+            </NavLink>
           </li>
         </ul>
       </div>
