@@ -2,6 +2,7 @@ import './App.css';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Nav from './Nav';
 import Home from './Home';
+import MovieDetails from './MovieDetails';
 
 function App() {
   return (
@@ -9,10 +10,8 @@ function App() {
       <div className="App">
         <Nav />
         <Routes>
-          {/* What goes here? Think about:
-              - Route for "/" should show Home
-              - Route for "/about" should show...what component?
-              - Do you need a route for individual movies? */}
+          <Route path="/" element={<Home />} />
+          <Route path="/movie/:id" element={<MovieDetails />} />
         </Routes>
       </div>
     </Router>
