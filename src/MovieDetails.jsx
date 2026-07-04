@@ -16,6 +16,8 @@ export default function MovieDetails() {
     const response = await fetch(`http://www.omdbapi.com/?i=${id}&apikey=c31b6b59`);
     const data = await response.json();
 
+    await new Promise(resolve => setTimeout(resolve, 800));
+
     if (data.Response === "True") {
       setMovie(data);
     }

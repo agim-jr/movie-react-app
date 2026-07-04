@@ -1,31 +1,25 @@
-import React, { useState, useEffect } from 'react';
-import MovieCard from './MovieCard';
-import SkeletonCard from './SkeletonCard';
+import React, { useState } from "react";
+import MovieCard from "./MovieCard";
 
 export default function Home() {
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
   const [movies, setMovies] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  // Fetch default movies on page load
-  useEffect(() => {
-    fetchMovies('popular'); // You can change this to any default search term
-  }, []);
-
-  const fetchMovies = async (query) => {
-    setLoading(true);
-    const response = await fetch(`http://www.omdbapi.com/?s=${query}&apikey=c31b6b59`);
-    const data = await response.json();
-
-    if (data.Search) {
-      setMovies(data.Search.slice(0, 6)); // Get only first 6 movies
-    }
-    setLoading(false);
-  };
+  const [loading, setLoading] = useState(false);
 
   const handleSearch = async () => {
     if (!searchTerm) return;
-    fetchMovies(searchTerm);
+
+    setLoading(true);
+    const response = await fetch(
+      `http://www.omdbapi.com/?s=${searchTerm}&apikey=c31b6b59`,
+    );
+    const data = await response.json();
+
+    if (data.Search) {
+      setMovies(data.Search);
+      console.log(data.Search); // Check console to see the data
+    }
+    setLoading(false);
   };
 
   return (
@@ -37,12 +31,11 @@ export default function Home() {
           placeholder="Search for a movie..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          onKeyPress={(e) => e.key === 'Enter' && handleSearch()}
         />
         <button onClick={handleSearch}>Search</button>
       </div>
 
-      <div className="filter-section" style={{ display: 'none' }}>
+      <div className="filter-section" style={{ display: "none" }}>
         <label htmlFor="sort-filter">Sort by:</label>
         <select id="sort-filter">
           <option value="default">Default</option>
@@ -55,14 +48,12 @@ export default function Home() {
 
       <div className="row">
         <div className="movie-list">
-          {loading ? (
-            Array(6).fill(0).map((_, index) => <SkeletonCard key={index} />)
-          ) : movies.length > 0 ? (
+          {movies.length > 0 ? (
             movies.map((movie) => (
               <MovieCard key={movie.imdbID} movie={movie} />
             ))
           ) : (
-            <p>No movies found. Try searching for something else!</p>
+            <p>Search for a movie to get started!</p>
           )}
         </div>
       </div>
