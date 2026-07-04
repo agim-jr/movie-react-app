@@ -1,0 +1,11 @@
+import React from 'react';
+
+export default function SkeletonCard() {
+  return (
+    <div className="movie-card skeleton">
+      <div className="skeleton-poster"></div>
+      <div className="skeleton-title"></div>
+      <div className="skeleton-year"></div>
+    </div>
+  );
+}
