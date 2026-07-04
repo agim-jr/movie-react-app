@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 
 export default function MovieDetails() {
@@ -7,11 +7,7 @@ export default function MovieDetails() {
   const [movie, setMovie] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchMovieDetails();
-  }, [id]);
-
-  const fetchMovieDetails = async () => {
+  const fetchMovieDetails = useCallback(async () => {
     setLoading(true);
     const response = await fetch(`http://www.omdbapi.com/?i=${id}&apikey=c31b6b59`);
     const data = await response.json();
@@ -22,7 +18,11 @@ export default function MovieDetails() {
       setMovie(data);
     }
     setLoading(false);
-  };
+  }, [id]);
+
+  useEffect(() => {
+    fetchMovieDetails();
+  }, [fetchMovieDetails]);
 
   if (loading) {
     return (
