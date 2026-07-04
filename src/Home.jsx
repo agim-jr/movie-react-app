@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import MovieCard from './MovieCard';
 import SkeletonCard from './SkeletonCard';
 
@@ -6,17 +6,8 @@ export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [movies, setMovies] = useState([]);
   const [filteredMovies, setFilteredMovies] = useState([]);
+  const [loading, setLoading] = useState(true);  // ← ADD THIS LINE
   const [sortOption, setSortOption] = useState('default');
-
-  // Fetch default movies on page load
-  useEffect(() => {
-    fetchMovies('popular');
-  }, []);
-
-  // Apply sorting whenever movies or sortOption changes
-  useEffect(() => {
-    sortMovies(sortOption);
-  }, [movies, sortOption]);
 
   const fetchMovies = async (query) => {
     setLoading(true);
@@ -32,7 +23,7 @@ export default function Home() {
     setLoading(false);
   };
 
-  const sortMovies = (option) => {
+  const sortMovies = useCallback((option) => {
     let sorted = [...movies];
 
     switch(option) {
@@ -54,7 +45,17 @@ export default function Home() {
     }
 
     setFilteredMovies(sorted);
-  };
+  }, [movies]);
+
+  // Fetch default movies on page load
+  useEffect(() => {
+    fetchMovies('popular');
+  }, []);
+
+  // Apply sorting whenever movies or sortOption changes
+  useEffect(() => {
+    sortMovies(sortOption);
+  }, [movies, sortOption, sortMovies]);
 
   const handleSearch = async () => {
     if (!searchTerm) return;
