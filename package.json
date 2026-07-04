@@ -1,7 +1,6 @@
 {
   "name": "movie-react-app",
   "version": "0.1.0",
-  "homepage": "https://agim-jr.github.io/movie-react-app",
   "private": true,
   "dependencies": {
     "@testing-library/dom": "^10.4.1",
