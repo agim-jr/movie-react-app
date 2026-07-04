@@ -1,70 +1,48 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect } from 'react';
 import MovieCard from './MovieCard';
 import SkeletonCard from './SkeletonCard';
 
 export default function Home() {
   const [searchTerm, setSearchTerm] = useState('');
   const [movies, setMovies] = useState([]);
-  const [filteredMovies, setFilteredMovies] = useState([]);
-  const [loading, setLoading] = useState(true);  // ← ADD THIS LINE
+  const [loading, setLoading] = useState(true);
   const [sortOption, setSortOption] = useState('default');
 
-  const fetchMovies = async (query) => {
+  useEffect(() => {
+    const fetchDefaultMovies = async () => {
+      setLoading(true);
+      const response = await fetch(`http://www.omdbapi.com/?s=popular&apikey=c31b6b59`);
+      const data = await response.json();
+      await new Promise(resolve => setTimeout(resolve, 800));
+      if (data.Search) {
+        setMovies(data.Search.slice(0, 6));
+      }
+      setLoading(false);
+    };
+    fetchDefaultMovies();
+  }, []);
+
+  const handleSearch = async () => {
+    if (!searchTerm) return;
     setLoading(true);
-    const response = await fetch(`http://www.omdbapi.com/?s=${query}&apikey=c31b6b59`);
+    const response = await fetch(`http://www.omdbapi.com/?s=${searchTerm}&apikey=c31b6b59`);
     const data = await response.json();
-
-    // Add minimum delay so skeleton is visible
     await new Promise(resolve => setTimeout(resolve, 800));
-
     if (data.Search) {
       setMovies(data.Search.slice(0, 6));
     }
     setLoading(false);
   };
 
-  const sortMovies = useCallback((option) => {
-    let sorted = [...movies];
-
-    switch(option) {
-      case 'a-z':
-        sorted.sort((a, b) => a.Title.localeCompare(b.Title));
-        break;
-      case 'z-a':
-        sorted.sort((a, b) => b.Title.localeCompare(a.Title));
-        break;
-      case 'newest':
-        sorted.sort((a, b) => parseInt(b.Year) - parseInt(a.Year));
-        break;
-      case 'oldest':
-        sorted.sort((a, b) => parseInt(a.Year) - parseInt(b.Year));
-        break;
-      default:
-        // Keep original order
-        break;
+  const sortedMovies = [...movies].sort((a, b) => {
+    switch(sortOption) {
+      case 'a-z': return a.Title.localeCompare(b.Title);
+      case 'z-a': return b.Title.localeCompare(a.Title);
+      case 'newest': return parseInt(b.Year) - parseInt(a.Year);
+      case 'oldest': return parseInt(a.Year) - parseInt(b.Year);
+      default: return 0;
     }
-
-    setFilteredMovies(sorted);
-  }, [movies]);
-
-  // Fetch default movies on page load
-  useEffect(() => {
-    fetchMovies('popular');
-  }, []);
-
-  // Apply sorting whenever movies or sortOption changes
-  useEffect(() => {
-    sortMovies(sortOption);
-  }, [movies, sortOption, sortMovies]);
-
-  const handleSearch = async () => {
-    if (!searchTerm) return;
-    fetchMovies(searchTerm);
-  };
-
-  const handleSortChange = (e) => {
-    setSortOption(e.target.value);
-  };
+  });
 
   return (
     <div className="container">
@@ -82,7 +60,7 @@ export default function Home() {
 
       <div className="filter-section">
         <label htmlFor="sort-filter">Sort by:</label>
-        <select id="sort-filter" value={sortOption} onChange={handleSortChange}>
+        <select id="sort-filter" value={sortOption} onChange={(e) => setSortOption(e.target.value)}>
           <option value="default">Default</option>
           <option value="a-z">Alphabetical A to Z</option>
           <option value="z-a">Alphabetical Z to A</option>
@@ -95,10 +73,8 @@ export default function Home() {
         <div className="movie-list">
           {loading ? (
             Array(6).fill(0).map((_, index) => <SkeletonCard key={index} />)
-          ) : filteredMovies.length > 0 ? (
-            filteredMovies.map((movie) => (
-              <MovieCard key={movie.imdbID} movie={movie} />
-            ))
+          ) : sortedMovies.length > 0 ? (
+            sortedMovies.map((movie) => <MovieCard key={movie.imdbID} movie={movie} />)
           ) : (
             <p>No movies found. Try searching for something else!</p>
           )}
