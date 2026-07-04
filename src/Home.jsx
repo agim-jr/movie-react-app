@@ -11,7 +11,7 @@ export default function Home() {
   useEffect(() => {
     const fetchDefaultMovies = async () => {
       setLoading(true);
-      const response = await fetch(`http://www.omdbapi.com/?s=popular&apikey=c31b6b59`);
+      const response = await fetch(`https://www.omdbapi.com/?s=popular&apikey=c31b6b59`);
       const data = await response.json();
       await new Promise(resolve => setTimeout(resolve, 800));
       if (data.Search) {
@@ -25,7 +25,7 @@ export default function Home() {
   const handleSearch = async () => {
     if (!searchTerm) return;
     setLoading(true);
-    const response = await fetch(`http://www.omdbapi.com/?s=${searchTerm}&apikey=c31b6b59`);
+    const response = await fetch(`https://www.omdbapi.com/?s=${searchTerm}&apikey=c31b6b59`);
     const data = await response.json();
     await new Promise(resolve => setTimeout(resolve, 800));
     if (data.Search) {

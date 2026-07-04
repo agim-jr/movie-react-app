@@ -9,7 +9,7 @@ export default function MovieDetails() {
 
   const fetchMovieDetails = useCallback(async () => {
     setLoading(true);
-    const response = await fetch(`http://www.omdbapi.com/?i=${id}&apikey=c31b6b59`);
+    const response = await fetch(`https://www.omdbapi.com/?i=${id}&apikey=c31b6b59`);
     const data = await response.json();
 
     await new Promise(resolve => setTimeout(resolve, 800));
